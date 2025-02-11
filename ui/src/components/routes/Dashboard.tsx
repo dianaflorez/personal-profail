@@ -1,18 +1,48 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { Project } from '../../model/project';
 import AboutMeCard from '../cards/AboutMeCard';
 import ProjectCard from '../cards/ProjectCard';
 import { themes } from '../../styles/ColorStyles';
 import { MediumText } from '../../styles/TextStyles';
 import createApiClient from '../../api/api-client-factory';
+import useProject from '../../hooks/useProject';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 import Loader from '../elements/Loader';
 import useFetchData from '../../hooks/useFetchData';
 
 const Dashboard = () => {
   const { t } = useTranslation();
   const apiClient = useMemo(() => createApiClient(), []);
-  const { data, isLoading, error } = useFetchData(apiClient.getDashboardInfo);
+  const { data, isLoading, error, reload: reloadData } = useFetchData(apiClient.getDashboardInfo);
+
+  // TODO: 4) Llama al hook useProject
+  const { addProject } = useProject();
+  const navigate = useNavigate();
+
+  // TODO: 4) Crea la función deleteProject
+  // HINT: el primer argumento debería ser element: React.MouseEvent<HTMLElement> para así llara a element.preventDefault() y element.stopPropagation()
+  // HINT: Además de eliminar el proyecto, hay que refrescar la interfaz de React
+  async function deleteProject(element: React.MouseEvent<HTMLElement>, id: string) {
+    element.preventDefault();
+    element.stopPropagation();
+
+    try {
+      await apiClient.deleteProject(id);
+      reloadData();
+    } catch (e) {
+      console.log('Error deleting project', e);
+    }
+  }
+
+  function updateProject(element: React.MouseEvent<HTMLElement>, project: Project) {
+    element.preventDefault();
+    element.stopPropagation();
+    addProject(project);
+    navigate('/admin');
+  }
 
   if (isLoading) {
     return <Loader message="Loading data" />;
@@ -40,7 +70,12 @@ const Dashboard = () => {
               {data?.projects
                 ?.sort((a, b) => b.timestamp - a.timestamp)
                 .map((project, index) => (
-                  <ProjectCard project={project} key={index} />
+                  <ProjectCard
+                    project={project}
+                    key={index}
+                    closeButton={(e, id) => deleteProject(e, id)}
+                    updateButton={(e, id) => updateProject(e, id)}
+                  />
                 ))}
             </ProjectWrapper>
           </ResponseWrapper>

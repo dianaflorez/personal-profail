@@ -2,10 +2,11 @@ import React, { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'rea
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import createApiClient from '../../api/api-client-factory';
+import useProject from '../../hooks/useProject';
 import { Project } from '../../model/project';
 import { themes } from '../../styles/ColorStyles';
 import { Caption, H1 } from '../../styles/TextStyles';
-import { useCreate } from '../../hooks/useCreate';
+import { useCreateOrUpdate } from '../../hooks/useCreateOrUpdateProject';
 import Loader from '../elements/Loader';
 import { useNavigate } from 'react-router';
 
@@ -21,10 +22,11 @@ const Admin = () => {
 
   const navigate = useNavigate();
   const apiClient = useMemo(() => createApiClient(), []);
-  // TODO: Implement a hook to create a project
-  const { create, status, error } = useCreate(apiClient.postProject);
+  // TODO: 5) Modify the hook to use create or update
+  const { createOrUpdate, status, error } = useCreateOrUpdate(apiClient.createOrUpdateProject);
+  const { project, removeProject } = useProject();
 
-  const [projectInput, setProjectInput] = useState<Partial<Project>>(emptyProjectInput);
+  const [projectInput, setProjectInput] = useState<Partial<Project>>(project || emptyProjectInput);
 
   const readyToSubmit =
     projectInput.title !== '' &&
@@ -33,13 +35,15 @@ const Admin = () => {
     projectInput.tag !== '' &&
     projectInput.version !== '';
 
-  // TODO: Implement a mechanism to navigate back on success
   useEffect(() => {
     if (status === 'success') {
+      removeProject();
       navigate('/dashboard');
     }
-    return () => {};
-  }, [status, navigate]);
+    return () => {
+      removeProject();
+    };
+  }, [status, removeProject, navigate]);
 
   async function postProject(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -54,8 +58,8 @@ const Admin = () => {
       timestamp: projectInput?.timestamp || Date.now()
     };
 
-    // TODO: Call the API to create a new project
-    create(newProject, errorMessage);
+    // TODO: 5) Call the create or update method
+    createOrUpdate(newProject, errorMessage);
   }
 
   function onChange(e: ChangeEvent<HTMLInputElement>, attribute: keyof Project) {
@@ -63,6 +67,7 @@ const Admin = () => {
   }
 
   function onReset() {
+    removeProject();
     setProjectInput(emptyProjectInput);
   }
 
@@ -119,7 +124,7 @@ const Admin = () => {
             <ButtonForm
               disabled={status === 'loading' || !readyToSubmit}
               type="submit"
-              value={t('admin.button_accept')}
+              value={project ? t('admin.button_accept_update') : t('admin.button_accept')}
             />
           </ButtonWrapper>
         </LoginPannel>
