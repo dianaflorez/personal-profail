@@ -4,7 +4,7 @@ import { GlobalStyle } from '../../styles/GlobalStyle';
 import { themes } from '../../styles/ColorStyles';
 import Header from './header';
 import { useTranslation } from 'react-i18next';
-// import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ const Layout = (props: LayoutProps) => {
 
   return (
     <>
-      {/* <Helmet> */}
+      <Helmet>
         <title>{t('meta.title')}</title>
         <meta name="description" content={t('meta.description')} />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -29,7 +29,7 @@ const Layout = (props: LayoutProps) => {
           content={themes.dark.primary}
           media="(prefers-color-scheme: dark)"
         />
-      {/* </Helmet> */}
+      </Helmet>
       <GlobalStyle />
       <Header />
       <main>{props.children}</main>

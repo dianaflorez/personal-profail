@@ -5,7 +5,7 @@ import WaveLanding from '../background/WaveLanding';
 import { themes } from '../../styles/ColorStyles';
 import { H1 } from '../../styles/TextStyles';
 import Lottie from 'lottie-react';
-import animationData from './teamwork.json';
+import animationData from './landing.json';
 
 const LandingPage = () => {
   const { t } = useTranslation();

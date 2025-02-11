@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useCallback, useEffect, useState } from 'react';
+import createApiClient from '../api/api-client-factory';
 import { User } from '../model/user';
 import {
   getCurrentUser,
@@ -7,7 +8,6 @@ import {
   logout as logoutService,
   setAuthToken
 } from '../utils/auth';
-import { mockLogin } from '../utils/mock-response';
 
 type AuthContextType = {
   user: User | undefined;
@@ -50,9 +50,10 @@ export function AuthProvider({ children }: Props) {
 
   const login = useCallback(
     async (username: string, password: string) => {
+      const api = createApiClient();
       setIsLoading(true);
       try {
-        const result = await mockLogin(username, password);
+        const result = await api.token(username, password);
         setAuthToken(result.token);
         setLogoutIfExpiredHandler(setUser);
         loadUser();

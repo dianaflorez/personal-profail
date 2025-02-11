@@ -4,7 +4,7 @@
     "title": "Personal Portfolio",
     "description": "Api to personal dashboard",
     "contact": {
-      "email": "lucasfernandezaragon@gmail.com"
+      "email": "dianaflorezbravo@gmail.com"
     },
     "license": {
       "name": "Apache 2.0",
@@ -14,8 +14,8 @@
   },
   "servers": [
     {
-      "url": "https://virtserver.swaggerhub.com/lucferbux/ThreePoints/1.0.0",
-      "description": "ThreePoints Portfolio API"
+      "url": "https://virtserver.swaggerhub.com/dianaflorez/portfolio/1.0.0",
+      "description": "portfolio Portfolio API"
     }
   ],
   "tags": [
@@ -231,7 +231,7 @@
           },
           "name": {
             "type": "string",
-            "example": "Lucas Fernandez"
+            "example": "Diana Florez"
           },
           "birthday": {
             "type": "string",
@@ -248,7 +248,7 @@
           },
           "github": {
             "type": "string",
-            "example": "https://github.com/lucferbux"
+            "example": "https://github.com/dianaflorez"
           }
         }
       },
@@ -306,7 +306,7 @@
           "mail": {
             "type": "string",
             "format": "mail",
-            "example": "lucasfernandezaragon@gmail.com"
+            "example": "dianaflorezbravo@gmail.com"
           },
           "password": {
             "type": "string",

@@ -28,8 +28,10 @@ export function setLogoutIfExpiredHandler(setUser: (user: any) => void) {
     return;
   }
 
-  // TODO: change dynamically in next session
-  logoutIfExpiredHandlerId = setTimeout(() => setUser(undefined), 1800000);
+  logoutIfExpiredHandlerId = setTimeout(
+    () => setUser(undefined),
+    token.expirationTimestampInMillis - Date.now()
+  );
 }
 
 export function setAuthToken(accessToken: string) {
@@ -93,9 +95,13 @@ export function getCurrentUser(): User | undefined {
 
 function isTokenActive(): boolean {
   const token = getToken();
-  // TODO: change in next session
+  const currentTimestamp = Date.now();
 
-  return !!token;
+  return !!(
+    token &&
+    token.expirationTimestampInMillis - currentTimestamp > 0 &&
+    token.notBeforeTimestampInMillis <= currentTimestamp
+  );
 }
 
 export { WrongCredentialsException, logout, getAccessToken, isTokenActive };

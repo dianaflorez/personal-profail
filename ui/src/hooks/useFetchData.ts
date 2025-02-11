@@ -1,16 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
+import { GenericError } from '../api/api-client';
 
 type FetchDataResult<T> = {
   data: T | null;
   isLoading: boolean;
-  error: Error | null;
+  error: Error | GenericError | null;
   reload: () => void;
 };
 
 export default function useFetchData<T>(fetchFunction: () => Promise<T>): FetchDataResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<Error | GenericError | null>(null);
   const [reloadCount, setReloadCount] = useState<number>(0);
 
   useEffect(() => {
@@ -19,7 +20,7 @@ export default function useFetchData<T>(fetchFunction: () => Promise<T>): FetchD
         const result = await fetchFunction();
         setData(result);
       } catch (err) {
-        if (err instanceof Error) {
+        if (err instanceof GenericError || err instanceof Error) {
           setError(err);
         }
       } finally {

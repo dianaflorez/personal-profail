@@ -5,14 +5,14 @@ import AboutMeCard from '../cards/AboutMeCard';
 import ProjectCard from '../cards/ProjectCard';
 import { themes } from '../../styles/ColorStyles';
 import { MediumText } from '../../styles/TextStyles';
+import createApiClient from '../../api/api-client-factory';
 import Loader from '../elements/Loader';
 import useFetchData from '../../hooks/useFetchData';
-import { mockFetchDashboard } from '../../utils/mock-response';
 
 const Dashboard = () => {
   const { t } = useTranslation();
-
-  const { data, isLoading, error } = useFetchData(mockFetchDashboard);
+  const apiClient = useMemo(() => createApiClient(), []);
+  const { data, isLoading, error } = useFetchData(apiClient.getDashboardInfo);
 
   if (isLoading) {
     return <Loader message="Loading data" />;
@@ -27,10 +27,6 @@ const Dashboard = () => {
       </Wrapper>
     );
   }
-
-  // TODO: 3) Create la función deleteProject
-  // HINT: first argument should be: React.MouseEvent<HTMLElement> to call element.preventDefault() and element.stopPropagation()
-  // HINT: On top of adding the document, we need to navigate to /admin
 
   return (
     <Wrapper>

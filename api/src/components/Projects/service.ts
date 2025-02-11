@@ -1,6 +1,8 @@
-import IProjectsModel from './model';
+import Joi from 'joi';
+import ProjectModel, { IProjectsModel } from './model';
+import ProjectsValidation from './validation';
 import { IProjectsService } from './interface';
-import { MockProjects } from './mock';
+import { Types } from 'mongoose';
 
 /**
  * @export
@@ -13,7 +15,7 @@ const ProjectsService: IProjectsService = {
    */
   async findAll(): Promise<IProjectsModel[]> {
     try {
-      return MockProjects;
+      return await ProjectModel.find({});
     } catch (error) {
       throw new Error(error.message);
     }
@@ -26,21 +28,45 @@ const ProjectsService: IProjectsService = {
    */
   async findOne(id: string): Promise<IProjectsModel> {
     try {
-      return MockProjects.find((element) => element.id === id);
+      const validate: Joi.ValidationResult<{
+        id: string;
+      }> = ProjectsValidation.getProject({
+        id
+      });
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
+      }
+
+      return await ProjectModel.findOne(
+        {
+          _id: new Types.ObjectId(id)
+        },
+        {
+          password: 0
+        }
+      );
     } catch (error) {
       throw new Error(error.message);
     }
   },
 
   /**
-   * @param {IProjectsModel} user
+   * @param {IProjectsModel} project
    * @returns {Promise < IProjectsModel >}
    * @memberof ProjectsService
    */
   async insert(body: IProjectsModel): Promise<IProjectsModel> {
     try {
-      console.log(body);
-      return MockProjects[0];
+      const validate: Joi.ValidationResult<IProjectsModel> = ProjectsValidation.createProject(body);
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
+      }
+
+      const project: IProjectsModel = await ProjectModel.create(body);
+
+      return project;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -53,8 +79,21 @@ const ProjectsService: IProjectsService = {
    */
   async remove(id: string): Promise<IProjectsModel> {
     try {
-      console.log(id);
-      return MockProjects[0];
+      const validate: Joi.ValidationResult<{
+        id: string;
+      }> = ProjectsValidation.removeProject({
+        id
+      });
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
+      }
+
+      const project: IProjectsModel = await ProjectModel.findOneAndRemove({
+        _id: new Types.ObjectId(id)
+      });
+
+      return project;
     } catch (error) {
       throw new Error(error.message);
     }

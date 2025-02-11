@@ -1,6 +1,8 @@
-import IUserModel from '@/components/User/model';
+import Joi from 'joi';
+import AuthValidation from './validation';
+import UserModel, { IUserModel } from '@/components/User/model';
 import { IAuthService } from './interface';
-import { MockLogin } from './mock';
+import { DocumentDefinition } from 'mongoose';
 
 /**
  * @export
@@ -12,11 +14,30 @@ const AuthService: IAuthService = {
    * @returns {Promise <IUserModel>}
    * @memberof AuthService
    */
-  async createUser(body: IUserModel): Promise<IUserModel> {
+  async createUser(body: DocumentDefinition<IUserModel>): Promise<IUserModel> {
     try {
-      console.log(body);
-      const user = MockLogin;
-      return user;
+      const validate: Joi.ValidationResult<IUserModel> = AuthValidation.createUser(body);
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
+      }
+
+      const user: IUserModel = new UserModel({
+        email: body.email,
+        password: body.password
+      });
+
+      const query: IUserModel = await UserModel.findOne({
+        email: body.email
+      });
+
+      if (query) {
+        throw new Error('This email already exists');
+      }
+
+      const saved: IUserModel = await user.save();
+
+      return saved;
     } catch (error) {
       throw new Error(error);
     }
@@ -28,13 +49,23 @@ const AuthService: IAuthService = {
    */
   async getUser(body: IUserModel): Promise<IUserModel> {
     try {
-      // TODO: check user and password
-      const user = MockLogin;
-      if (body.email === user.email && body.password === user.password) {
-        return user;
-      } else {
-        throw new Error('user invalid');
+      const validate: Joi.ValidationResult<IUserModel> = AuthValidation.getUser(body);
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
       }
+
+      const user: IUserModel = await UserModel.findOne({
+        email: body.email
+      });
+
+      const isMatched: boolean = user && (await user.comparePassword(body.password));
+
+      if (isMatched) {
+        return user;
+      }
+
+      throw new Error('Invalid password or email');
     } catch (error) {
       throw new Error(error);
     }

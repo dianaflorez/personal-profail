@@ -11,9 +11,9 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <HelmetProvider>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </HelmetProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </HelmetProvider>
   </React.StrictMode>
 );

@@ -1,6 +1,8 @@
-import { IAboutMeModel } from './model';
+import Joi from 'joi';
+import AboutMeModel, { IAboutMeModel } from './model';
+import AboutMeValidation from './validation';
 import { IAboutMeService } from './interface';
-import { MockAboutMe } from './mock';
+import { Types } from 'mongoose';
 
 /**
  * @export
@@ -8,12 +10,12 @@ import { MockAboutMe } from './mock';
  */
 const AboutMeService: IAboutMeService = {
   /**
-   * @returns {Promise < IAboutMeModel >}
+   * @returns {Promise < IAboutMeModel[] >}
    * @memberof AboutMeService
    */
   async findAll(): Promise<IAboutMeModel> {
     try {
-      const result = MockAboutMe;
+      const result = await AboutMeModel.find({});
       if (result.length > 0) {
         return result[0];
       } else {
@@ -31,17 +33,24 @@ const AboutMeService: IAboutMeService = {
    */
   async findOne(id: string): Promise<IAboutMeModel> {
     try {
-      try {
-        console.log(id);
-        const result = MockAboutMe;
-        if (result.length > 0) {
-          return result[0];
-        } else {
-          throw new Error('empty search');
-        }
-      } catch (error) {
-        throw new Error(error.message);
+      const validate: Joi.ValidationResult<{
+        id: string;
+      }> = AboutMeValidation.getAboutMe({
+        id
+      });
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
       }
+
+      return await AboutMeModel.findOne(
+        {
+          _id: new Types.ObjectId(id)
+        },
+        {
+          password: 0
+        }
+      );
     } catch (error) {
       throw new Error(error.message);
     }
@@ -53,8 +62,19 @@ const AboutMeService: IAboutMeService = {
    * @memberof AboutMeService
    */
   async insert(body: IAboutMeModel): Promise<IAboutMeModel> {
-    console.log(body);
-    return undefined;
+    try {
+      const validate: Joi.ValidationResult<IAboutMeModel> = AboutMeValidation.createAboutMe(body);
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
+      }
+
+      const user: IAboutMeModel = await AboutMeModel.create(body);
+
+      return user;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   },
 
   /**
@@ -63,8 +83,25 @@ const AboutMeService: IAboutMeService = {
    * @memberof AboutMeService
    */
   async remove(id: string): Promise<IAboutMeModel> {
-    console.log(id);
-    return undefined;
+    try {
+      const validate: Joi.ValidationResult<{
+        id: string;
+      }> = AboutMeValidation.removeAboutMe({
+        id
+      });
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
+      }
+
+      const user: IAboutMeModel = await AboutMeModel.findOneAndRemove({
+        _id: new Types.ObjectId(id)
+      });
+
+      return user;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 };
 

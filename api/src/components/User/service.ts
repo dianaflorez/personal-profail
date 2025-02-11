@@ -1,6 +1,8 @@
-import IUserModel from './model';
+import Joi from 'joi';
+import UserModel, { IUserModel } from './model';
+import UserValidation from './validation';
 import { IUserService } from './interface';
-import { MockLogin } from '../Auth/mock';
+import { Types } from 'mongoose';
 
 /**
  * @export
@@ -13,7 +15,7 @@ const UserService: IUserService = {
    */
   async findAll(): Promise<IUserModel[]> {
     try {
-      return [MockLogin];
+      return await UserModel.find({});
     } catch (error) {
       throw new Error(error.message);
     }
@@ -26,8 +28,24 @@ const UserService: IUserService = {
    */
   async findOne(id: string): Promise<IUserModel> {
     try {
-      console.log(id);
-      return MockLogin;
+      const validate: Joi.ValidationResult<{
+        id: string;
+      }> = UserValidation.getUser({
+        id
+      });
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
+      }
+
+      return await UserModel.findOne(
+        {
+          _id: new Types.ObjectId(id)
+        },
+        {
+          password: 0
+        }
+      );
     } catch (error) {
       throw new Error(error.message);
     }
@@ -40,8 +58,15 @@ const UserService: IUserService = {
    */
   async insert(body: IUserModel): Promise<IUserModel> {
     try {
-      console.log(body);
-      return MockLogin;
+      const validate: Joi.ValidationResult<IUserModel> = UserValidation.createUser(body);
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
+      }
+
+      const user: IUserModel = await UserModel.create(body);
+
+      return user;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -54,8 +79,21 @@ const UserService: IUserService = {
    */
   async remove(id: string): Promise<IUserModel> {
     try {
-      console.log(id);
-      return MockLogin;
+      const validate: Joi.ValidationResult<{
+        id: string;
+      }> = UserValidation.removeUser({
+        id
+      });
+
+      if (validate.error) {
+        throw new Error(validate.error.message);
+      }
+
+      const user: IUserModel = await UserModel.findOneAndRemove({
+        _id: new Types.ObjectId(id)
+      });
+
+      return user;
     } catch (error) {
       throw new Error(error.message);
     }
