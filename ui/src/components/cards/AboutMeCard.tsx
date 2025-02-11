@@ -20,9 +20,9 @@ const AboutMeCard = (props: AboutMeCardProps) => {
       <InfoWrapper>
         <InfoSection>
           <AboutMeCardRow title={t('aboutMeCard.name')} value={props.aboutMe.name} />
-          {props.aboutMe.birthday && (
+          {/* {props.aboutMe.birthday && (
             <AboutMeCardRow title={t('aboutMeCard.birthdate')} value={props.aboutMe.birthday} />
-          )}
+          )} */}
           {props.aboutMe.nationality && (
             <AboutMeCardRow
               title={t('aboutMeCard.nationality')}
