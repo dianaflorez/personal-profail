@@ -22,6 +22,8 @@ const AboutMeService: IAboutMeService = {
         throw new Error('empty search');
       }
     } catch (error) {
+      console.error("Error in AboutMe search:::", error.message);
+
       throw new Error(error.message);
     }
   },
