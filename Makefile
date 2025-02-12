@@ -11,6 +11,10 @@ dev-api:
 dev-ui:
 	cd ui && npm run dev
 
+.PHONY: dev-ui-build
+dev-ui:
+	cd ui && npm run build
+
 .PHONY: dev-start
 dev-start: 
 	make -j 3 mongo-start dev-api dev-ui
