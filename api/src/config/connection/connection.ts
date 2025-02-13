@@ -23,7 +23,14 @@ export const db: mongoose.Connection = mongoose.createConnection(MONGO_URI, conn
 
   console.log("Conectado a MongoDB Atlas");
   console.log("Base de datos en uso:", mongoose.connection.name);  // Imprime el nombre de la base de datos
-
+  // mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  // .then(() => {
+  //   console.log("Conectado a MongoDB Atlas");
+  //   console.log("Base de datos en uso:", mongoose.connection.name);  // Imprime el nombre de la base de datos
+  // })
+  // .catch((err) => {
+  //   console.error("Error al conectar con MongoDB:", err);
+  // });
 
 // handlers
 db.on('connecting', () => {
