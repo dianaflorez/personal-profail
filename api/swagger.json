@@ -236,7 +236,7 @@
           "birthday": {
             "type": "string",
             "format": "date-time",
-            "example": "1994-04-08T09:12:33.001Z"
+            "example": "1993-03-16T09:12:33.001Z"
           },
           "nationality": {
             "type": "string",
@@ -244,7 +244,7 @@
           },
           "job": {
             "type": "string",
-            "example": "Red Hat"
+            "example": "IdearTics"
           },
           "github": {
             "type": "string",

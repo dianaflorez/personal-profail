@@ -34,11 +34,11 @@ export const mockAboutme = () =>
         JSON.parse(
           `{
             "id":"12389asdfasf8",
-            "name":"Lucas Fernández Aragón",
+            "name":"Diana Cristy Florez Bravo",
             "birthday":765817712000,
-            "nationality":"Spain",
-            "job":"Red Hat",
-            "github":"https://github.com/lucferbux"
+            "nationality":"Colombian",
+            "job":"Ideartics",
+            "github":"https://github.com/dianaflorez"
             }`
         )
       );
