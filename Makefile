@@ -1,6 +1,6 @@
-USER  ?= dianaflorezbravo@gmail.com
-PASS  ?= t0dWILFMd46vG9BA
-MONGODB_ATLAS ?= mongodb+srv://dianaflorezbravo:t0dWILFMd46vG9BA@dianaflorez.am8hq.mongodb.net/?retryWrites=true&w=majority&appName=dianaflorez
+USER  ?= user@gmail.com
+PASS  ?= unicornio
+MONGODB_ATLAS ?= mongodb+srv://<username>:<password>@<cluster>.mongodb.net
 
 # Init Scripts
 .PHONY: dev-api
