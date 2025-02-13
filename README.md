@@ -4,9 +4,37 @@ Este proyecto esta realizaco con React, Express Swagger, Mongo DB
 
 Además, como se enseñará en el propio proyecto, podemos ver el prototipo final en [este link](https://personal-profail.netlify.app/)
 
-## Documentación Backend
+## Backend
 
-Puedes encontrar la documentación de este proyecto en [este enlace](https://personal-profail.onrender.com/docs).
+# Personal Profail 🎭
+
+Un backend en **Node.js** y **MongoDB** desplegado en **Render**, diseñado para gestionar información personal y profesional de un usuario.
+
+## 🚀 Tecnologías utilizadas
+- **Node.js** con **Express**
+- **MongoDB** como base de datos
+- **Mongoose** para modelado de datos
+- **CORS** para permitir el acceso desde el frontend
+- **Render** para el despliegue del backend
+
+## 📌 Endpoints principales
+| Método | Ruta | Descripción |
+|--------|------|------------|
+| GET    | `/v1/aboutMe` | Obtiene información personal |
+| POST   | `/v1/aboutMe` | Crea una nueva entrada de información |
+| PUT    | `/v1/aboutMe/:id` | Actualiza información personal |
+| DELETE | `/v1/aboutMe/:id` | Elimina una entrada de información |
+
+## 🌍 Despliegue
+- **Backend en Render**: [`https://personal-profail.onrender.com`](https://personal-profail.onrender.com)
+- **Frontend en Netlify**: [`https://tufrontend.netlify.app`](https://tufrontend.netlify.app)
+
+## 🛠 Instalación y uso local
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/dianaflorez/personal-profail.git
+   cd personal-profail
+
 
 
 ## Prototipo
