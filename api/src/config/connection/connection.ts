@@ -21,6 +21,10 @@ const MONGO_URI = `${config.database.MONGODB_URI}${config.database.MONGODB_DB_MA
 
 export const db: mongoose.Connection = mongoose.createConnection(MONGO_URI, connectOptions);
 
+  console.log("Conectado a MongoDB Atlas");
+  console.log("Base de datos en uso:", mongoose.connection.name);  // Imprime el nombre de la base de datos
+
+
 // handlers
 db.on('connecting', () => {
   Logger.info('[MongoDB] connecting');
